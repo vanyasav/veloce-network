@@ -1,0 +1,15 @@
+---
+import type { Restaurant } from '../lib/directus';
+
+interface Props {
+  restaurant: Restaurant;
+}
+const { restaurant } = Astro.props;
+---
+
+{restaurant.about_text && (
+	<section id="chi-siamo" class="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
+		<h2 class="text-2xl font-bold text-[var(--color-secondary)] sm:text-3xl">Chi siamo</h2>
+		<p class="mt-4 text-base leading-relaxed text-black/70 sm:text-lg">{restaurant.about_text}</p>
+	</section>
+)}

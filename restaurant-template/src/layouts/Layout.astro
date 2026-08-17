@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import type { Restaurant } from '../lib/directus';
+
+interface Props {
+  restaurant: Restaurant;
+  title?: string;
+}
+
+const { restaurant, title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="it">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title ?? restaurant.name}</title>
+		<meta name="description" content={restaurant.about_text ?? restaurant.name} />
+		<style define:vars={{
+			primary: restaurant.primary_color ?? '#c0392b',
+			secondary: restaurant.secondary_color ?? '#2c2c2c',
+		}}>
+			:root {
+				--color-primary: var(--primary);
+				--color-secondary: var(--secondary);
+			}
+		</style>
+	</head>
+	<body class="min-h-screen bg-white text-[var(--color-secondary)] antialiased">
+		<slot />
+	</body>
+</html>

@@ -1,0 +1,80 @@
+---
+import type { MenuCategory, MenuItem } from '../lib/directus';
+import { assetUrl } from '../lib/directus';
+
+interface Props {
+  categories: MenuCategory[];
+  items: MenuItem[];
+  lang?: string;
+}
+const { categories, items, lang = 'it' } = Astro.props;
+
+const t = (obj: Record<string, string> | null | undefined) => (obj ? obj[lang] ?? Object.values(obj)[0] ?? '' : '');
+
+const uncategorized = items.filter((i) => i.category === null);
+const groups = [
+	...categories.map((cat) => ({ cat, list: items.filter((i) => i.category === cat.id) })),
+	...(uncategorized.length ? [{ cat: null, list: uncategorized }] : []),
+].filter((g) => g.list.length > 0);
+---
+
+<section id="menu" class="bg-black/[0.02] py-14 sm:py-20">
+	<div class="mx-auto max-w-5xl px-4 sm:px-6">
+		<h2 class="text-2xl font-bold text-[var(--color-secondary)] sm:text-3xl">Menu</h2>
+
+		<div class="mt-8 flex flex-col gap-12">
+			{groups.map(({ cat, list }) => (
+				<div>
+					{cat && (
+						<h3 class="mb-4 text-lg font-semibold uppercase tracking-wide text-[var(--color-primary)] sm:text-xl">
+							{t(cat.name)}
+						</h3>
+					)}
+					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						{list.map((item) => {
+							const photo = assetUrl(item.photo, '?width=200&height=200&fit=cover&quality=75&format=webp');
+							return (
+								<div class="flex gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+									{photo && (
+										<img
+											src={photo}
+											alt={t(item.name)}
+											width="72"
+											height="72"
+											loading="lazy"
+											class="h-18 w-18 shrink-0 rounded-lg object-cover"
+										/>
+									)}
+									<div class="min-w-0 flex-1">
+										<div class="flex items-baseline justify-between gap-3">
+											<h4 class="truncate font-semibold text-[var(--color-secondary)]">{t(item.name)}</h4>
+											<span class="shrink-0 font-semibold text-[var(--color-primary)]">
+												€{Number(item.price).toFixed(2)}
+											</span>
+										</div>
+										{item.description && (
+											<p class="mt-1 text-sm text-black/60">{t(item.description)}</p>
+										)}
+										{(item.vegan || item.vegetarian || item.gluten_free) && (
+											<div class="mt-2 flex flex-wrap gap-1.5">
+												{item.vegan && (
+													<span class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">vegan</span>
+												)}
+												{item.vegetarian && !item.vegan && (
+													<span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">vegetariano</span>
+												)}
+												{item.gluten_free && (
+													<span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">senza glutine</span>
+												)}
+											</div>
+										)}
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				</div>
+			))}
+		</div>
+	</div>
+</section>

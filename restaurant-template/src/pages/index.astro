@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import MenuSection from '../components/MenuSection.astro';
+import Hours from '../components/Hours.astro';
+import ContactFooter from '../components/ContactFooter.astro';
+import { getRestaurant, getMenu } from '../lib/directus';
+
+const restaurant = await getRestaurant();
+const { categories, items } = await getMenu(restaurant.id);
+---
+
+<Layout restaurant={restaurant}>
+	<Header restaurant={restaurant} />
+	<Hero restaurant={restaurant} />
+	<About restaurant={restaurant} />
+	<MenuSection categories={categories} items={items} />
+	<Hours restaurant={restaurant} />
+	<ContactFooter restaurant={restaurant} />
+</Layout>

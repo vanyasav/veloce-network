@@ -1,0 +1,8 @@
+# OS
+.DS_Store
+
+# never commit secrets, regardless of where they end up
+.env
+.env.*
+*.env
+secrets/

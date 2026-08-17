@@ -1,0 +1,71 @@
+---
+import type { Restaurant } from '../lib/directus';
+
+interface Props {
+  restaurant: Restaurant;
+}
+const { restaurant } = Astro.props;
+
+const links = [
+  { href: '#chi-siamo', label: 'Chi siamo' },
+  { href: '#menu', label: 'Menu' },
+  { href: '#orari', label: 'Orari' },
+  { href: '#contatti', label: 'Contatti' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-black/5">
+	<div class="mx-auto max-w-5xl px-4 sm:px-6">
+		<div class="flex h-16 items-center justify-between">
+			<a href="#top" class="text-lg font-bold tracking-tight text-[var(--color-primary)] sm:text-xl">
+				{restaurant.name}
+			</a>
+
+			<!-- Mobile toggle: checkbox hack, zero JS -->
+			<input type="checkbox" id="nav-toggle" class="peer hidden" />
+			<label
+				for="nav-toggle"
+				class="grid h-11 w-11 cursor-pointer place-items-center rounded-md md:hidden"
+				aria-label="Apri il menu di navigazione"
+			>
+				<span class="relative block h-0.5 w-6 bg-[var(--color-secondary)] before:absolute before:-top-2 before:block before:h-0.5 before:w-6 before:bg-[var(--color-secondary)] after:absolute after:top-2 after:block after:h-0.5 after:w-6 after:bg-[var(--color-secondary)]"></span>
+			</label>
+
+			<nav class="hidden md:flex md:items-center md:gap-8">
+				{links.map((link) => (
+					<a href={link.href} class="text-sm font-medium text-[var(--color-secondary)] hover:text-[var(--color-primary)]">
+						{link.label}
+					</a>
+				))}
+				{restaurant.phone && (
+					<a
+						href={`tel:${restaurant.phone.replace(/\s+/g, '')}`}
+						class="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+					>
+						{restaurant.phone}
+					</a>
+				)}
+			</nav>
+
+			<!-- Mobile menu panel -->
+			<nav class="absolute inset-x-0 top-16 hidden flex-col gap-1 border-b border-black/5 bg-white px-4 pb-4 pt-2 shadow-lg peer-checked:flex md:hidden">
+				{links.map((link) => (
+					<a
+						href={link.href}
+						class="rounded-md px-3 py-3 text-base font-medium text-[var(--color-secondary)] hover:bg-black/5"
+					>
+						{link.label}
+					</a>
+				))}
+				{restaurant.phone && (
+					<a
+						href={`tel:${restaurant.phone.replace(/\s+/g, '')}`}
+						class="mt-2 rounded-full bg-[var(--color-primary)] px-4 py-3 text-center text-base font-semibold text-white"
+					>
+						Chiama: {restaurant.phone}
+					</a>
+				)}
+			</nav>
+		</div>
+	</div>
+</header>

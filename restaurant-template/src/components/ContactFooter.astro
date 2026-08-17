@@ -1,0 +1,54 @@
+---
+import type { Restaurant } from '../lib/directus';
+
+interface Props {
+  restaurant: Restaurant;
+}
+const { restaurant } = Astro.props;
+const mapsHref = restaurant.address
+	? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.address)}`
+	: null;
+---
+
+<section id="contatti" class="bg-[var(--color-secondary)] py-14 text-white sm:py-20">
+	<div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+		<h2 class="text-2xl font-bold sm:text-3xl">Contatti</h2>
+		<div class="mt-6 flex flex-col items-center gap-3 text-base sm:text-lg">
+			{restaurant.address && <p class="text-white/80">{restaurant.address}</p>}
+			{restaurant.phone && (
+				<a href={`tel:${restaurant.phone.replace(/\s+/g, '')}`} class="font-semibold hover:underline">
+					{restaurant.phone}
+				</a>
+			)}
+			{restaurant.email && (
+				<a href={`mailto:${restaurant.email}`} class="text-white/80 hover:underline">
+					{restaurant.email}
+				</a>
+			)}
+		</div>
+
+		<div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+			{mapsHref && (
+				<a
+					href={mapsHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="rounded-full bg-[var(--color-primary)] px-6 py-3 text-center text-base font-semibold hover:opacity-90"
+				>
+					Come arrivare
+				</a>
+			)}
+			{restaurant.phone && (
+				<a
+					href={`tel:${restaurant.phone.replace(/\s+/g, '')}`}
+					class="rounded-full bg-white/10 px-6 py-3 text-center text-base font-semibold ring-1 ring-white/30 hover:bg-white/20"
+				>
+					Chiamaci
+				</a>
+			)}
+		</div>
+	</div>
+	<p class="mt-12 text-center text-xs text-white/40">
+		© {new Date().getFullYear()} {restaurant.name}
+	</p>
+</section>
